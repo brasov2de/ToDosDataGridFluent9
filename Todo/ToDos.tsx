@@ -7,15 +7,19 @@ import {
     DataGridHeaderCell,
 } from "@fluentui/react-data-grid-react-window";
 
-
-import {
-  PresenceBadgeStatus,
-  Avatar,  
+type EntityRecord = ComponentFramework.PropertyHelper.DataSetApi.EntityRecord;
+import {  
+  Avatar, makeStyles,
   TableCellLayout,
   TableColumnDefinition,
   createTableColumn,
   DataGridProps,
+  FluentProvider,
+  webLightTheme  
 } from "@fluentui/react-components";
+import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icons";
+//Checkmark24Filled
+//CheckmarkCircle24Filled
 /*
 import { Avatar } from "@fluentui/react-avatar";
 import { PresenceBadgeStatus } from "@fluentui/react-badge";
@@ -26,9 +30,9 @@ import{ DataGridBody,  DataGridRow,
   DataGridCell,
   TableCellLayout,
   TableColumnDefinition,
-  createTableColumn,} from "@fluentui/react-table";*/
+  createTableColumn,} from "@fluentui/react-table";
 import {FluentProvider } from "@fluentui/react-provider"; 
-import { webLightTheme } from "@fluentui/react-theme"; 
+import { webLightTheme } from "@fluentui/react-theme"; */
 import * as React from "react";
 /*import {
   FolderRegular,
@@ -40,7 +44,7 @@ import * as React from "react";
   VideoRegular,
 } from "@fluentui/react-icons";
 */
-
+/*
 type FileCell = {
   label: string;
   icon?: JSX.Element;
@@ -178,20 +182,84 @@ const columns: TableColumnDefinition<Item>[] = [
     },
   }),
 ];
-export const ToDos = () => {
-  const defaultSortState = React.useMemo<
-    Parameters<NonNullable<DataGridProps["onSortChange"]>>[1]
-  >(() => ({ sortColumn: "file", sortDirection: "ascending" }), []);
 
+*/
+
+const useStyles = makeStyles({
+  button: {  
+    backgroundColor: 'transparent',
+    ':hover': {       
+      backgroundColor: 'transparent', 
+       boxShadow: "0 1px 1px 1px"
+    } 
+  }
+});
+
+export interface IToDosProps {
+  dataset : ComponentFramework.PropertyTypes.DataSet
+}
+export const ToDos = ({dataset}: IToDosProps) => {
+  const [selected, setSelected] = React.useState<any[]>([]);
+
+  const classes = useStyles();
+
+  const complete = (item:any) => {
+    console.log("complete");
+    console.log(item.getRecordId());
+  }
+  
+  const cancel = (item:any) => {
+    console.log("cancel");
+    console.log(item.getRecordId());
+  }
+
+  const items= dataset.sortedRecordIds.map((id)=>dataset.records[id]);
+  const columns: TableColumnDefinition<EntityRecord>[] = dataset.columns.sort((a,b)=>a.order-b.order)
+    .map((column)=>createTableColumn<EntityRecord>({
+      columnId: column.name,      
+      compare: (a, b) => {
+        return (a as any)?.getValue() - (b as any)?.getValue();
+      },
+      renderCell: (item) => {
+        return item.getFormattedValue(column.name);
+      },
+      renderHeaderCell: () => {
+        return column.displayName;
+      }      
+    }));
+  const allColumns = [
+  createTableColumn({
+    columnId: "check",
+    renderCell: (item) => {
+      return <Avatar icon={<CheckmarkCircleRegular />} shape="square" aria-label="Complete" color="dark-green" className={classes.button} onClick={() => complete(item)}/>
+    },
+    renderHeaderCell : () => {
+      return "Complete";
+    }
+  }),  
+  createTableColumn({
+    columnId: "cancel",
+    renderCell: (item) => {
+      {
+        return <Avatar icon={<DismissCircleRegular/>} shape="square" aria-label="Complete" color="red" className={classes.button} onClick={() => cancel(item)}/>
+      }
+    },
+    renderHeaderCell : () => {
+      return "Cancel";
+    }
+  }), 
+  ...columns
+]
   return (
+    <div style={{ width: "100%" }}>
     <FluentProvider theme={webLightTheme}>
-     <DataGrid
+     <DataGrid      
       items={items}
-      columns={columns}
-      sortable
-      selectionMode="multiselect"
-      getRowId={(item) => item.file.label}
-      onSelectionChange={(e, data) => console.log(data)}
+      columns={allColumns}      
+      sortable      
+      selectionMode="single"
+      getRowId={(item) => item.getRecordId()}
+      onSelectionChange={(e, data) => setSelected(Array.from(data.selectedItems))}
     >
       <DataGridHeader>
         <DataGridRow selectionCell={{ "aria-label": "Select all rows" }}>
@@ -200,19 +268,20 @@ export const ToDos = () => {
           )}
         </DataGridRow>
       </DataGridHeader>
-      <DataGridBody<Item> itemSize={50} height={500}>
+      <DataGridBody<EntityRecord> itemSize={50} height={500}>
         {({ item, rowId }) => (
-          <DataGridRow<Item>
+          <DataGridRow<EntityRecord>
             key={rowId}
             selectionCell={{ "aria-label": "Select row" }}
           >
             {({ renderCell }) => (
               <DataGridCell>{renderCell(item)}</DataGridCell>
-            )}
+            )}           
           </DataGridRow>
         )}
       </DataGridBody>
     </DataGrid>
     </FluentProvider>
+    </div>
   );
 };

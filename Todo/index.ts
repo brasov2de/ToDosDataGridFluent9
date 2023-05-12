@@ -1,6 +1,6 @@
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
 import { ReactElement, createElement } from 'react';
-import { ToDos } from "./ToDos";
+import { IToDosProps, ToDos } from "./ToDos";
 
 export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private notifyOutputChanged: () => void;      
@@ -24,9 +24,10 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
         state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;        
-        if((window as any).__tabsterInstance?._version < "4.4.1"){
+      /*  this is a workaround for an issue with an earlier version of tabster introduced by the new Fluent UI controls in Power Apps
+      if((window as any).__tabsterInstance?._version < "4.4.1"){
             (window as any).__tabsterInstance = null;
-        }
+        }*/
     }
 
     /**
@@ -35,8 +36,8 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): ReactElement {    
-       // const props : IToDosProps = { dataset: context.parameters.dataset };    
-       return createElement(ToDos);
+        const props : IToDosProps = { dataset: context.parameters.dataset };    
+       return createElement(ToDos, props);
     }
 
     /**

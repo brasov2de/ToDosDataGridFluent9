@@ -16,6 +16,9 @@
     <SolutionRootPath>src</SolutionRootPath>
   </PropertyGroup>
 
+<PropertyGroup>
+    <SolutionPackageType>Unmanaged</SolutionPackageType>
+  </PropertyGroup>
   <!-- Solution Packager overrides, un-comment to use: SolutionPackagerType (Managed, Unmanaged, Both)
   <PropertyGroup>
     <SolutionPackageType>Managed</SolutionPackageType>
