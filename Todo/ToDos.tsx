@@ -187,10 +187,13 @@ const columns: TableColumnDefinition<Item>[] = [
 
 const useStyles = makeStyles({
   button: {  
-    backgroundColor: 'transparent',
-    ':hover': {       
-      backgroundColor: 'transparent', 
+    'opacity': 0.5,
+    ':hover': {             
+       backgroundColor: 'transparent',
        boxShadow: "0 1px 1px 1px"
+    }, 
+    ':active': {
+      backgroundColor: '#EFEFEF'
     } 
   }
 });
@@ -231,13 +234,18 @@ export const ToDos = ({dataset}: IToDosProps) => {
   createTableColumn({
     columnId: "check",
     renderCell: (item) => {
-      return <Avatar icon={<CheckmarkCircleRegular />} shape="square" aria-label="Complete" color="dark-green" className={classes.button} onClick={() => complete(item)}/>
+      return (
+        <>
+      <Avatar icon={<CheckmarkCircleRegular />} shape="square" aria-label="Complete" color="dark-green" className={classes.button} onClick={() => complete(item)}/>
+      <Avatar icon={<DismissCircleRegular/>} shape="square" aria-label="Complete" color="red" className={classes.button} onClick={() => cancel(item)}/>
+      </>
+      )
     },
     renderHeaderCell : () => {
       return "Complete";
     }
   }),  
-  createTableColumn({
+  /*createTableColumn({
     columnId: "cancel",
     renderCell: (item) => {
       {
@@ -247,7 +255,7 @@ export const ToDos = ({dataset}: IToDosProps) => {
     renderHeaderCell : () => {
       return "Cancel";
     }
-  }), 
+  }), */
   ...columns
 ]
   return (
