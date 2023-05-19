@@ -199,21 +199,34 @@ const useStyles = makeStyles({
 });
 
 export interface IToDosProps {
-  dataset : ComponentFramework.PropertyTypes.DataSet
+  dataset : ComponentFramework.PropertyTypes.DataSet, 
+  onChanged: (id: string) => void;
 }
-export const ToDos = ({dataset}: IToDosProps) => {
+export const ToDos = ({dataset, onChanged}: IToDosProps) => {
   const [selected, setSelected] = React.useState<any[]>([]);
 
   const classes = useStyles();
 
-  const complete = (item:any) => {
-    console.log("complete");
-    console.log(item.getRecordId());
+  const complete = (item:any) => {    
+    const id = item.getRecordId();
+    console.log(id);
+    (dataset.records[id] as any).setValue("statecode", 1);
+    (dataset.records[id] as any).setValue("statuscode", 5);
+    (dataset.records[id] as any).save().then(() => {
+      onChanged(id);
+      dataset.refresh()
+    });    
   }
   
   const cancel = (item:any) => {
-    console.log("cancel");
-    console.log(item.getRecordId());
+    const id = item.getRecordId();
+    console.log(id);
+    (dataset.records[id] as any).setValue("statecode", 2);
+    (dataset.records[id] as any).setValue("statuscode", 6);
+    (dataset.records[id] as any).save().then(() => {
+      onChanged(id);
+      dataset.refresh();
+    });  
   }
 
   const items= dataset.sortedRecordIds.map((id)=>dataset.records[id]);
@@ -231,6 +244,7 @@ export const ToDos = ({dataset}: IToDosProps) => {
       }      
     }));
   const allColumns = [
+    ...columns,
   createTableColumn({
     columnId: "check",
     renderCell: (item) => {
@@ -244,19 +258,7 @@ export const ToDos = ({dataset}: IToDosProps) => {
     renderHeaderCell : () => {
       return "Complete";
     }
-  }),  
-  /*createTableColumn({
-    columnId: "cancel",
-    renderCell: (item) => {
-      {
-        return <Avatar icon={<DismissCircleRegular/>} shape="square" aria-label="Complete" color="red" className={classes.button} onClick={() => cancel(item)}/>
-      }
-    },
-    renderHeaderCell : () => {
-      return "Cancel";
-    }
-  }), */
-  ...columns
+  })
 ]
   return (
     <div style={{ width: "100%" }}>

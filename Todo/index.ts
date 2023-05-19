@@ -5,6 +5,14 @@ import { IToDosProps, ToDos } from "./ToDos";
 export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private notifyOutputChanged: () => void;      
     private container: HTMLDivElement;
+    private lastDatasetChanged: Date = new Date();
+    private dataset : ComponentFramework.PropertyTypes.DataSet;
+    private totalRecordCount : number = 0;
+
+    private raiseDataChanged(id:string) {
+        this.lastDatasetChanged = new Date;
+        this.notifyOutputChanged();
+    }    
 
     /**
      * Empty constructor.
@@ -36,7 +44,13 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): ReactElement {    
-        const props : IToDosProps = { dataset: context.parameters.dataset };    
+        const props : IToDosProps = { dataset: context.parameters.dataset, onChanged: this.raiseDataChanged.bind(this) };    
+        this.dataset = context.parameters.dataset;
+        if(this.totalRecordCount != this.dataset.paging.totalResultCount){
+            this.totalRecordCount = this.dataset.paging.totalResultCount;
+            this.lastDatasetChanged = new Date();
+            this.notifyOutputChanged();
+        }
        return createElement(ToDos, props);
     }
 
@@ -45,7 +59,11 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
     public getOutputs(): IOutputs {
-        return { };
+        return { 
+            onDataChanged : this.lastDatasetChanged, 
+            totalCount: this.totalRecordCount, 
+            objectOutput: { resordIds: this.dataset.sortedRecordIds, count : this.dataset.paging.totalResultCount }
+        };
     }
 
     /**
