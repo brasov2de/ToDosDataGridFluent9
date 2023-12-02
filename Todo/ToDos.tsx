@@ -5,7 +5,7 @@ import {
     DataGridHeader,
     DataGridCell,
     DataGridHeaderCell,
-} from "@fluentui/react-data-grid-react-window";
+} from "@fluentui-contrib/react-data-grid-react-window";
 
 type EntityRecord = ComponentFramework.PropertyHelper.DataSetApi.EntityRecord;
 import {  
