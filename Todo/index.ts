@@ -44,7 +44,12 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): ReactElement {    
-        const props : IToDosProps = { dataset: context.parameters.dataset, onChanged: this.raiseDataChanged.bind(this) };    
+        const props : IToDosProps = { 
+            dataset: context.parameters.dataset, 
+            onChanged: this.raiseDataChanged.bind(this),
+            isCustomPage : context.parameters.isCustomPage.raw || false
+
+         };    
         this.dataset = context.parameters.dataset;
         if(this.totalRecordCount != this.dataset.paging.totalResultCount){
             this.totalRecordCount = this.dataset.paging.totalResultCount;

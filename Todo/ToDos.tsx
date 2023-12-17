@@ -15,7 +15,8 @@ import {
   createTableColumn,
   DataGridProps,
   FluentProvider,
-  webLightTheme  
+  webLightTheme , 
+  Theme 
 } from "@fluentui/react-components";
 import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icons";
 //Checkmark24Filled
@@ -34,156 +35,7 @@ import{ DataGridBody,  DataGridRow,
 import {FluentProvider } from "@fluentui/react-provider"; 
 import { webLightTheme } from "@fluentui/react-theme"; */
 import * as React from "react";
-/*import {
-  FolderRegular,
-  EditRegular,
-  OpenRegular,
-  DocumentRegular,
-  PeopleRegular,
-  DocumentPdfRegular,
-  VideoRegular,
-} from "@fluentui/react-icons";
-*/
-/*
-type FileCell = {
-  label: string;
-  icon?: JSX.Element;
-};
 
-type LastUpdatedCell = {
-  label: string;
-  timestamp: number;
-};
-
-type LastUpdateCell = {
-  label: string;
-  icon?: JSX.Element;
-};
-
-type AuthorCell = {
-  label: string;
-  status: PresenceBadgeStatus;
-};
-
-type Item = {
-  file: FileCell;
-  author: AuthorCell;
-  lastUpdated: LastUpdatedCell;
-  lastUpdate: LastUpdateCell;
-};
-
-const items: Item[] = [
-  {
-    file: { label: "Meeting notes" },
-    author: { label: "Max Mustermann", status: "available" },
-    lastUpdated: { label: "7h ago", timestamp: 1 },
-    lastUpdate: {
-      label: "You edited this",
-   
-    },
-  },
-  {
-    file: { label: "Thursday presentation"},
-    author: { label: "Erika Mustermann", status: "busy" },
-    lastUpdated: { label: "Yesterday at 1:45 PM", timestamp: 2 },
-    lastUpdate: {
-      label: "You recently opened this",
-     
-    },
-  },
-  {
-    file: { label: "Training recording" },
-    author: { label: "John Doe", status: "away" },
-    lastUpdated: { label: "Yesterday at 1:45 PM", timestamp: 2 },
-    lastUpdate: {
-      label: "You recently opened this",
-   
-    },
-  },
-  {
-    file: { label: "Purchase order" },
-    author: { label: "Jane Doe", status: "offline" },
-    lastUpdated: { label: "Tue at 9:30 AM", timestamp: 3 },
-    lastUpdate: {
-      label: "You shared this in a Teams chat",
-     
-    },
-  },
-];
-
-const columns: TableColumnDefinition<Item>[] = [
-  createTableColumn<Item>({
-    columnId: "file",
-    compare: (a, b) => {
-      return a.file.label.localeCompare(b.file.label);
-    },
-    renderHeaderCell: () => {
-      return "File";
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout media={item.file.icon}>
-          {item.file.label}
-        </TableCellLayout>
-      );
-    },
-  }),
-  createTableColumn<Item>({
-    columnId: "author",
-    compare: (a, b) => {
-      return a.author.label.localeCompare(b.author.label);
-    },
-    renderHeaderCell: () => {
-      return "Author";
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout
-          media={
-            <Avatar
-              aria-label={item.author.label}
-              name={item.author.label}
-              badge={{ status: item.author.status }}
-            />
-          }
-        >
-          {item.author.label}
-        </TableCellLayout>
-      );
-    },
-  }),
-  createTableColumn<Item>({
-    columnId: "lastUpdated",
-    compare: (a, b) => {
-      return a.lastUpdated.timestamp - b.lastUpdated.timestamp;
-    },
-    renderHeaderCell: () => {
-      return "Last updated";
-    },
-
-    renderCell: (item) => {
-      return item.lastUpdated.label;
-    },
-  }),
-  createTableColumn<Item>({
-    columnId: "lastUpdate",
-    compare: (a, b) => {
-      return a.lastUpdate.label.localeCompare(b.lastUpdate.label);
-    },
-    renderHeaderCell: () => {
-      return "Last update";
-    },
-    renderCell: (item) => {
-      return (
-        <TableCellLayout media={item.lastUpdate.icon}>
-          {item.lastUpdate.label}
-        </TableCellLayout>
-      );
-    },
-  }),
-];
-
-*/
 
 const useStyles = makeStyles({
   button: {  
@@ -201,17 +53,19 @@ const useStyles = makeStyles({
 export interface IToDosProps {
   dataset : ComponentFramework.PropertyTypes.DataSet, 
   onChanged: (id: string) => void;
+  theme ?: Theme;
+  isCustomPage : boolean;
 }
-export const ToDos = ({dataset, onChanged}: IToDosProps) => {
+export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) => {
   const [selected, setSelected] = React.useState<any[]>([]);
 
   const classes = useStyles();
 
   const complete = (item:any) => {    
     const id = item.getRecordId();
-    console.log(id);
-    (dataset.records[id] as any).setValue("statecode", 1);
-    (dataset.records[id] as any).setValue("statuscode", 5);
+    console.log(id);    
+    (dataset.records[id] as any).setValue("statecode", isCustomPage ? {Id: 1} : 1);
+    (dataset.records[id] as any).setValue("statuscode", isCustomPage ? {Id:5} : 5);
     (dataset.records[id] as any).save().then(() => {
       onChanged(id);
       dataset.refresh()
@@ -221,8 +75,8 @@ export const ToDos = ({dataset, onChanged}: IToDosProps) => {
   const cancel = (item:any) => {
     const id = item.getRecordId();
     console.log(id);
-    (dataset.records[id] as any).setValue("statecode", 2);
-    (dataset.records[id] as any).setValue("statuscode", 6);
+    (dataset.records[id] as any).setValue("statecode", isCustomPage ? {Id: 2} : 2);
+    (dataset.records[id] as any).setValue("statuscode", isCustomPage ? {Id:6} : 6);
     (dataset.records[id] as any).save().then(() => {
       onChanged(id);
       dataset.refresh();
