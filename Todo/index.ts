@@ -47,8 +47,8 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
         const props : IToDosProps = { 
             dataset: context.parameters.dataset, 
             onChanged: this.raiseDataChanged.bind(this),
-            isCustomPage : context.parameters.isCustomPage.raw || false
-
+            isCustomPage : context.parameters.isCustomPage.raw || false,
+           onRecordSelected: (context as any).events.OnRecordSelected,
          };    
         this.dataset = context.parameters.dataset;
         if(this.totalRecordCount != this.dataset.paging.totalResultCount){

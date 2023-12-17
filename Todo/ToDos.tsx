@@ -43,8 +43,9 @@ export interface IToDosProps {
   onChanged: (id: string) => void;
   theme ?: Theme;
   isCustomPage : boolean;
+  onRecordSelected: (id: string) => void;
 }
-export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) => {
+export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected}: IToDosProps) => {
   const [selected, setSelected] = React.useState<Set<string>>(new Set(dataset.getSelectedRecordIds()));
 
   const classes = useStyles();
@@ -107,7 +108,8 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) =>
       const newIds = data.selectedItems;      
       setSelected(newIds);      
       dataset.setSelectedRecordIds(Array.from(newIds));
-    //  dataset.refresh();
+      onRecordSelected(newIds.length > 0 ? newIds[0] : "");
+     // dataset.refresh();
   }
   return (
     <div style={{ width: "100%" }}>
