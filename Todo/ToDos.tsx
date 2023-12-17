@@ -21,19 +21,7 @@ import {
 import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icons";
 //Checkmark24Filled
 //CheckmarkCircle24Filled
-/*
-import { Avatar } from "@fluentui/react-avatar";
-import { PresenceBadgeStatus } from "@fluentui/react-badge";
-import{ DataGridBody,  DataGridRow,
-  DataGrid,
-  DataGridHeader,
-  DataGridHeaderCell,
-  DataGridCell,
-  TableCellLayout,
-  TableColumnDefinition,
-  createTableColumn,} from "@fluentui/react-table";
-import {FluentProvider } from "@fluentui/react-provider"; 
-import { webLightTheme } from "@fluentui/react-theme"; */
+
 import * as React from "react";
 
 
@@ -57,7 +45,7 @@ export interface IToDosProps {
   isCustomPage : boolean;
 }
 export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) => {
-  const [selected, setSelected] = React.useState<any[]>([]);
+  const [selected, setSelected] = React.useState<Set<string>>(new Set(dataset.getSelectedRecordIds()));
 
   const classes = useStyles();
 
@@ -113,7 +101,14 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) =>
       return "Complete";
     }
   })
-]
+];
+
+  const changeSelection = (e: any, data: any) => {
+      const newIds = data.selectedItems;      
+      setSelected(newIds);      
+      dataset.setSelectedRecordIds(Array.from(newIds));
+    //  dataset.refresh();
+  }
   return (
     <div style={{ width: "100%" }}>
     <FluentProvider theme={webLightTheme}>
@@ -123,7 +118,8 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage}: IToDosProps) =>
       sortable      
       selectionMode="single"
       getRowId={(item) => item.getRecordId()}
-      onSelectionChange={(e, data) => setSelected(Array.from(data.selectedItems))}
+      selectedItems={selected}
+      onSelectionChange={changeSelection}
     >
       <DataGridHeader>
         <DataGridRow selectionCell={{ "aria-label": "Select all rows" }}>
