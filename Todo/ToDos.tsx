@@ -35,7 +35,7 @@ export interface IToDosProps {
   onChanged: (id: string) => void;
   theme ?: Theme;
   isCustomPage : boolean;
-  onRecordSelected: (id: string) => void;
+  onRecordSelected: () => void;
   commandProps : TCommandProps;
 }
 export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected, commandProps}: IToDosProps) => {
@@ -109,7 +109,7 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected
       const newIds = data.selectedItems;      
       setSelected(newIds);      
       dataset.setSelectedRecordIds(Array.from(newIds));
-      onRecordSelected(newIds.length > 0 ? newIds[0] : "");
+      onRecordSelected();
      // dataset.refresh();
   }
   return (
