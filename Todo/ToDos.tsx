@@ -23,20 +23,12 @@ import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icon
 //CheckmarkCircle24Filled
 
 import * as React from "react";
+import { RowCommand, useStyles } from "./RowCommand";
 
+export type TCommandProps = { 
+  dispatchEvent ?: ( value: any) => void;  
+}
 
-const useStyles = makeStyles({
-  button: {  
-    'opacity': 0.5,
-    ':hover': {             
-       backgroundColor: 'transparent',
-       boxShadow: "0 1px 1px 1px"
-    }, 
-    ':active': {
-      backgroundColor: '#EFEFEF'
-    } 
-  }
-});
 
 export interface IToDosProps {
   dataset : ComponentFramework.PropertyTypes.DataSet, 
@@ -44,8 +36,9 @@ export interface IToDosProps {
   theme ?: Theme;
   isCustomPage : boolean;
   onRecordSelected: (id: string) => void;
+  commandProps : TCommandProps;
 }
-export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected}: IToDosProps) => {
+export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected, commandProps}: IToDosProps) => {
   const [selected, setSelected] = React.useState<Set<string>>(new Set(dataset.getSelectedRecordIds()));
 
   const classes = useStyles();
@@ -86,15 +79,23 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected
         return column.displayName;
       }      
     }));
+  
   const allColumns = [
     ...columns,
   createTableColumn({
     columnId: "check",
-    renderCell: (item) => {
+    renderCell: (item: ComponentFramework.PropertyHelper.DataSetApi.EntityRecord) => {     
       return (
         <>
       <Avatar icon={<CheckmarkCircleRegular />} shape="square" aria-label="Complete" color="dark-green" className={classes.button} onClick={() => complete(item)}/>
       <Avatar icon={<DismissCircleRegular/>} shape="square" aria-label="Complete" color="red" className={classes.button} onClick={() => cancel(item)}/>
+      <RowCommand 
+          rowCommand={{                          
+              dispatchEvent :  commandProps.dispatchEvent
+            }}
+            id={item.getRecordId()} 
+            
+          />
       </>
       )
     },

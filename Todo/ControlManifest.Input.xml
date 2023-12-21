@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="Dianamics" constructor="Todo" version="0.0.25" display-name-key="Todo" description-key="Todo description" control-type="virtual" >
+  <control namespace="Dianamics" constructor="Todo" version="0.0.40" display-name-key="Todo" description-key="Todo description" control-type="virtual" >
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -23,9 +23,10 @@
     <property name="onDataChanged" display-name-key="OnDataChanged" description-key="OnDataChanged" of-type="DateAndTime.DateAndTime" usage="output" required="false" />
     <property name="totalCount" display-name-key="TotalCount" description-key="TotalCount" of-type="Whole.None" usage="output" required="false" />
     <property name="objectOutput" display-name-key="ObjectOutput" description-key="ObjectOutput" of-type="Object" usage="output" required="false" />  
-    <property name="isCustomPage" display-name-key="IsCustomPage" description-key="IsCustomPage" of-type="TwoOptions" usage="input" required="false" /> 
-    <event name="OnPriorityChanged" display-name-key="OnPriorityChanged" description-key="OnPriorityChanged" />     
-    <event name="OnRecordSelected" display-name-key="OnRecordSelected" description-key="OnRecordSelected" />     
+    <property name="isCustomPage" display-name-key="IsCustomPage" description-key="IsCustomPage" of-type="TwoOptions" usage="input" required="false" />     
+    <event name="OnRecordSelected" display-name-key="OnRecordSelected" description-key="OnRecordSelected" />         
+    <event name="OnRowCommand" display-name-key="OnRowCommand" description-key="OnRowCommand" />     
+    <property name="rowCommandOutputs" display-name-key="eventOutputs" description-key="eventOutputs" of-type="SingleLine.Text" usage="output" required="false"/>         
        
     <resources>
       <code path="index.ts" order="1"/>

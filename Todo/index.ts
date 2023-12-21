@@ -9,6 +9,9 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
     private dataset : ComponentFramework.PropertyTypes.DataSet;
     private totalRecordCount : number = 0;
 
+    private rowCommandOutputs ?: string;
+    private events : Function[] = [];
+
     private raiseDataChanged(id:string) {
         this.lastDatasetChanged = new Date;
         this.notifyOutputChanged();
@@ -38,6 +41,8 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
         }*/
     }
 
+
+
     /**
      * Called when any value in the property bag has changed. This includes field values, data-sets, global values such as container height and width, offline status, control metadata values such as label, visible, etc.
      * @param context The entire property bag available to control via Context Object; It contains values as set up by the customizer mapped to names defined in the manifest, as well as utility functions
@@ -49,6 +54,14 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
             onChanged: this.raiseDataChanged.bind(this),
             isCustomPage : context.parameters.isCustomPage.raw || false,
            onRecordSelected: (context as any).events.OnRecordSelected,
+           commandProps: {                          
+            dispatchEvent: (context as any).events?.OnRowCommand ? (value: any ) => {
+                this.rowCommandOutputs = value;
+                //(context as any).events?.OnRowCommand();
+                this.events.push((context as any).events?.OnRowCommand);
+                this.notifyOutputChanged();
+            } : undefined
+           }
          };    
         this.dataset = context.parameters.dataset;
         if(this.totalRecordCount != this.dataset.paging.totalResultCount){
@@ -56,18 +69,27 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
             this.lastDatasetChanged = new Date();
             this.notifyOutputChanged();
         }
+      /*  if(this.events.length > 0 ){
+            this.events.forEach((e) => e());
+            this.events = [];
+        }*/
        return createElement(ToDos, props);
     }
+    //Important24Filled
+    //Important24Regular
 
     /**
      * It is called by the framework prior to a control receiving new data.
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
-    public getOutputs(): IOutputs {
+    public getOutputs(): IOutputs {        
+        this.events.forEach((e) => e());
+        this.events = [];        
         return { 
             onDataChanged : this.lastDatasetChanged, 
             totalCount: this.totalRecordCount, 
-            objectOutput: { resordIds: this.dataset.sortedRecordIds, count : this.dataset.paging.totalResultCount }
+            objectOutput: { resordIds: this.dataset.sortedRecordIds, count : this.dataset.paging.totalResultCount }, 
+            rowCommandOutputs : this.rowCommandOutputs
         };
     }
 
