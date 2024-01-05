@@ -54,6 +54,7 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
             onChanged: this.raiseDataChanged.bind(this),
             isCustomPage : context.parameters.isCustomPage.raw || false,
             onRecordSelected: (context as any).events.OnRecordSelected,
+            theme: (context as any).fluentDesignLanguage.tokenTheme, 
             commandProps: {                          
             dispatchEvent: (context as any).events?.OnRowCommand ? (value: any ) => {
                 this.rowCommandOutputs = value;

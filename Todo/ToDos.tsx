@@ -114,7 +114,7 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected
   }
   return (
     <div style={{ width: "100%" }}>
-    <FluentProvider theme={webLightTheme}>
+    <FluentProvider theme={theme}>
      <DataGrid      
       items={items}
       columns={allColumns}      
