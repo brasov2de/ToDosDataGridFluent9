@@ -7,6 +7,8 @@ import {
     DataGridHeaderCell,
 } from "@fluentui-contrib/react-data-grid-react-window";
 
+
+
 type EntityRecord = ComponentFramework.PropertyHelper.DataSetApi.EntityRecord;
 import {  
   Avatar, makeStyles,
@@ -15,8 +17,13 @@ import {
   createTableColumn,
   DataGridProps,
   FluentProvider,
-  webLightTheme , 
-  Theme 
+ // webLightTheme , 
+  Theme , 
+  createLightTheme, 
+  createDarkTheme,
+  BrandVariants, 
+//  mergeThemes, 
+  PartialTheme
 } from "@fluentui/react-components";
 import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icons";
 //Checkmark24Filled
@@ -29,6 +36,24 @@ export type TCommandProps = {
   dispatchEvent ?: ( value: any) => void;  
 }
 
+const myNewTheme: BrandVariants = { 
+  10: "#040204",
+  20: "#1C141F",
+  30: "#2F1F35",
+  40: "#3F2848",
+  50: "#50315C",
+  60: "#613A70",
+  70: "#724385",
+  80: "#854D9B",
+  90: "#9757B1",
+  100: "#A467BC",
+  110: "#AF78C4",
+  120: "#BA89CC",
+  130: "#C59BD4",
+  140: "#D0ACDC",
+  150: "#DABEE4",
+  160: "#E5D0EB"
+};
 
 export interface IToDosProps {
   dataset : ComponentFramework.PropertyTypes.DataSet, 
@@ -40,6 +65,8 @@ export interface IToDosProps {
 }
 export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected, commandProps}: IToDosProps) => {
   const [selected, setSelected] = React.useState<Set<string>>(new Set(dataset.getSelectedRecordIds()));
+
+  const generatedTheme = createLightTheme(myNewTheme);
 
   const classes = useStyles();
 
@@ -114,7 +141,7 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected
   }
   return (
     <div style={{ width: "100%" }}>
-    <FluentProvider theme={theme}>
+    <FluentProvider theme={generatedTheme}>
      <DataGrid      
       items={items}
       columns={allColumns}      
