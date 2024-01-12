@@ -55,6 +55,8 @@ export class Todo implements ComponentFramework.ReactControl<IInputs, IOutputs> 
             isCustomPage : context.parameters.isCustomPage.raw || false,
             onRecordSelected: (context as any).events.OnRecordSelected,
             theme: (context as any).fluentDesignLanguage.tokenTheme, 
+            basePaletteColor: context.parameters.basePaletteColor.raw ?? undefined,
+            isLightTheme: context.parameters.isLightTheme.raw ?? true,
             commandProps: {                          
             dispatchEvent: (context as any).events?.OnRowCommand ? (value: any ) => {
                 this.rowCommandOutputs = value;

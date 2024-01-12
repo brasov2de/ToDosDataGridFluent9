@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <manifest>
-  <control namespace="Dianamics" constructor="Todo" version="0.0.42" display-name-key="Todo" description-key="Todo description" control-type="virtual" >
+  <control namespace="Dianamics" constructor="Todo" version="0.0.46" display-name-key="Todo" description-key="Todo description" control-type="virtual" >
     <!--external-service-usage node declares whether this 3rd party PCF control is using external service or not, if yes, this control will be considered as premium and please also add the external domain it is using.
     If it is not using any external service, please set the enabled="false" and DO NOT add any domain below. The "enabled" will be false by default.
     Example1:
@@ -26,7 +26,9 @@
     <property name="isCustomPage" display-name-key="IsCustomPage" description-key="IsCustomPage" of-type="TwoOptions" usage="input" required="false" />     
     <event name="OnRecordSelected" display-name-key="OnRecordSelected" description-key="OnRecordSelected" />         
     <event name="OnRowCommand" display-name-key="OnRowCommand" description-key="OnRowCommand" />     
-    <property name="rowCommandOutputs" display-name-key="eventOutputs" description-key="eventOutputs" of-type="SingleLine.Text" usage="output" required="false"/>         
+    <property name="rowCommandOutputs" display-name-key="eventOutputs" description-key="eventOutputs" of-type="SingleLine.Text" usage="output" required="false"/>
+    <property name="basePaletteColor" display-name-key="BasePaletteColor" description-key="BasePaletteColor" of-type="SingleLine.Text" usage="input" required="false" />         
+    <property name="isLightTheme" display-name-key="IsLightTheme" description-key="IsLightTheme" of-type="TwoOptions" usage="input" required="false" />     
        
     <resources>
       <code path="index.ts" order="1"/>

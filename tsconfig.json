@@ -4,6 +4,7 @@
         "typeRoots": ["node_modules/@types"],
         "module": "ES2020",
         "moduleResolution": "node",
-        "target": "ES2020"
+        "target": "ES2020", 
+        "esModuleInterop": true
     }
 }

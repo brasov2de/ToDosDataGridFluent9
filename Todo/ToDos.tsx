@@ -31,6 +31,7 @@ import {CheckmarkCircleRegular, DismissCircleRegular} from "@fluentui/react-icon
 
 import * as React from "react";
 import { RowCommand, useStyles } from "./RowCommand";
+import { generateBrandVariants } from "./ColorGenerator";
 
 export type TCommandProps = { 
   dispatchEvent ?: ( value: any) => void;  
@@ -62,11 +63,21 @@ export interface IToDosProps {
   isCustomPage : boolean;
   onRecordSelected: () => void;
   commandProps : TCommandProps;
+  basePaletteColor ?: string;
+  isLightTheme ?: boolean;
 }
-export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected, commandProps}: IToDosProps) => {
+export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected, commandProps, basePaletteColor, isLightTheme}: IToDosProps) => {
   const [selected, setSelected] = React.useState<Set<string>>(new Set(dataset.getSelectedRecordIds()));
 
-  const generatedTheme = createLightTheme(myNewTheme);
+  const [myTheme, setTheme] = React.useState(theme);
+  React.useEffect(() => {    
+    setTheme(basePaletteColor!=null && basePaletteColor.length > 0 ? 
+        isLightTheme ?
+            createLightTheme(generateBrandVariants(basePaletteColor)) 
+          : createDarkTheme(generateBrandVariants(basePaletteColor))
+       : theme);
+ // const generatedTheme = createLightTheme(myNewTheme);
+  }, [basePaletteColor, isLightTheme]);
 
   const classes = useStyles();
 
@@ -141,7 +152,7 @@ export const ToDos = ({dataset, onChanged, theme, isCustomPage, onRecordSelected
   }
   return (
     <div style={{ width: "100%" }}>
-    <FluentProvider theme={generatedTheme}>
+    <FluentProvider theme={myTheme}>
      <DataGrid      
       items={items}
       columns={allColumns}      
